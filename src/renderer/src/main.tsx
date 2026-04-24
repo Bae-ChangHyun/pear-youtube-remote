@@ -107,6 +107,9 @@ function App() {
   const refreshTimerRef = useRef<number | null>(null);
   const volumeTipTimerRef = useRef<number | null>(null);
   const volumeSyncResumeTimerRef = useRef<number | null>(null);
+  const settingsRef = useRef(settings);
+  const refreshSeqRef = useRef(0);
+  const busyRefreshSeqRef = useRef(0);
 
   const activeServer = useMemo(
     () => settings.servers.find((server) => server.id === settings.activeServerId) || settings.servers[0],
@@ -119,9 +122,17 @@ function App() {
   }, [song]);
 
   async function refresh(silent = false) {
+    const seq = refreshSeqRef.current + 1;
+    refreshSeqRef.current = seq;
+    const requestedServerId = settingsRef.current.activeServerId;
+    const isCurrentRefresh = () => seq === refreshSeqRef.current && requestedServerId === settingsRef.current.activeServerId;
     try {
-      if (!silent) setBusy(true);
+      if (!silent) {
+        busyRefreshSeqRef.current = seq;
+        setBusy(true);
+      }
       const status = await api.probe();
+      if (!isCurrentRefresh()) return;
       setProbe(status);
       if (status.status === 'needs-auth') {
         setSong(null);
@@ -134,6 +145,7 @@ function App() {
           api.playerState().catch(() => DEFAULT_PLAYER_STATE),
           api.queue().catch(() => []),
         ]);
+        if (!isCurrentRefresh()) return;
         setSong(now);
         setPlayerState(nextState);
         const remoteVolume = readVolumeState(nextState.volume);
@@ -149,13 +161,17 @@ function App() {
       }
       setError('');
     } catch (err) {
+      if (!isCurrentRefresh()) return;
       setProbe({ ok: false, status: 'offline' });
       setSong(null);
       setPlayerState(DEFAULT_PLAYER_STATE);
       setQueue([]);
       setError(err instanceof Error ? err.message : String(err));
     } finally {
-      if (!silent) setBusy(false);
+      if (!silent && busyRefreshSeqRef.current === seq) {
+        busyRefreshSeqRef.current = 0;
+        setBusy(false);
+      }
     }
   }
 
@@ -208,8 +224,10 @@ function App() {
   }
 
   async function switchServer(serverId: string) {
+    refreshSeqRef.current += 1;
     await run(async () => {
       const saved = await api.saveSettings({ activeServerId: serverId });
+      settingsRef.current = saved;
       setSettings(saved);
       setDraft(saved);
       setHits([]);
@@ -241,8 +259,10 @@ function App() {
   }
 
   async function saveDraftSettings() {
+    refreshSeqRef.current += 1;
     await run(async () => {
       const saved = await api.saveSettings(draft);
+      settingsRef.current = saved;
       setSettings(saved);
       setDraft(saved);
       setShowSettings(false);
@@ -290,13 +310,24 @@ function App() {
     setHits([]);
   }
 
+  async function clearQueue() {
+    if (queue.length === 0) return;
+    if (!window.confirm('Clear the remote queue? This cannot be undone.')) return;
+    await run(() => api.control('clearQueue'));
+  }
+
   useEffect(() => {
     api.platform().then(setPlatform).catch(() => setPlatform('linux'));
     api.getSettings().then((loaded) => {
+      settingsRef.current = loaded;
       setSettings(loaded);
       setDraft(loaded);
     }).then(() => refresh());
   }, []);
+
+  useEffect(() => {
+    settingsRef.current = settings;
+  }, [settings]);
 
   useEffect(() => {
     const id = window.setInterval(() => refresh(true), Math.max(1000, settings.pollMs || 2500));
@@ -401,7 +432,7 @@ function App() {
         <div className="queue-panel compact-panel">
           <div className="panel-heading">
             <div><p className="eyebrow">Remote lineup</p><h2>Up next</h2></div>
-            <div className="panel-actions"><button onClick={() => refresh()}><Repeat size={15} /></button><button onClick={() => run(() => api.control('clearQueue'))}><Trash size={15} /></button></div>
+            <div className="panel-actions"><button onClick={() => refresh()}><Repeat size={15} /></button><button onClick={clearQueue}><Trash size={15} /></button></div>
           </div>
           <div className="queue-list">
             {queue.slice(0, 28).map((item) => (
