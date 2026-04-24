@@ -3,7 +3,7 @@
 
 # Pear YouTube Remote
 
-A minimal desktop remote controller for Pear Desktop's YouTube Music API server.
+A focused remote controller for YouTube Music running inside Pear Desktop.
 
 [![Electron](https://img.shields.io/badge/Electron-34-9feaf9?logo=electron&logoColor=white)](https://www.electronjs.org/)
 [![React](https://img.shields.io/badge/React-18-61dafb?logo=react&logoColor=white)](https://react.dev/)
@@ -16,11 +16,17 @@ A minimal desktop remote controller for Pear Desktop's YouTube Music API server.
 
 ## About
 
-Pear YouTube Remote is a small Electron app for controlling YouTube Music running inside [Pear Desktop](https://github.com/pear-apps/pear-desktop) from another Linux or macOS machine.
+Pear YouTube Remote is a small Electron app for controlling YouTube Music running inside [Pear Desktop](https://github.com/pear-devs/pear-desktop) from another Linux or macOS machine.
 
 It talks to Pear Desktop's `api-server` plugin over HTTP, so the actual music playback stays on the remote computer while this app acts as a focused controller: search, play, queue, seek, volume, likes, shuffle, repeat, and connection switching.
 
-The project was extracted as a standalone app from the YouTube control logic originally used in `jarvis`, but it is intentionally independent and designed as a normal desktop open-source project.
+It is best treated as a companion app rather than a Pear Desktop plugin: Pear Desktop owns playback and exposes the API; Pear YouTube Remote stays outside as a lightweight controller that can run on a different machine.
+
+## Positioning
+
+Pear Desktop already provides the player, plugins, and `api-server`. This project adds a dedicated remote-control surface for desk setups where the playback machine is not the machine in front of you.
+
+Good upstream PR candidates for Pear Desktop are API improvements such as lyrics exposure, remote-client documentation, volume state consistency, and typed queue/search responses. The full controller UI should stay here as a separate app unless Pear Desktop maintainers explicitly want a bundled remote companion.
 
 ## Preview
 
@@ -53,6 +59,7 @@ The UI follows the shape of YouTube Music/Pear Desktop without trying to be a fu
 - Pear Desktop installed on the playback machine
 - Pear Desktop `api-server` plugin enabled
 - Network access from the controller machine to the remote Pear Desktop API port
+- A bearer token if Pear Desktop uses the default `AUTH_AT_FIRST` API auth strategy
 
 Default Pear Desktop API URL:
 
@@ -89,8 +96,8 @@ On the computer that will actually play music:
 
 1. Install Pear Desktop.
 2. Open Pear Desktop and enable the `api-server` plugin.
-3. Confirm the API server port. The default is usually `26538`.
-4. If auth is enabled, approve the client or copy the bearer token.
+3. Confirm the API server host and port. Pear Desktop defaults to `0.0.0.0:26538` for the plugin.
+4. If auth is enabled, approve the client and copy the returned bearer token. Pear Desktop defaults to `AUTH_AT_FIRST`.
 5. Make sure the controller machine can reach the API URL over the network.
 
 Common local test:
@@ -195,7 +202,7 @@ See [`docs/API_REFERENCE.md`](docs/API_REFERENCE.md) for implementation notes.
 
 Thumbnails are supported when Pear Desktop exposes them through the current song, search, or queue renderer payloads.
 
-Lyrics are not currently supported because the public Pear Desktop `api-server` routes used by this app do not expose a stable lyrics endpoint. Adding lyrics would require a separate lyrics provider or a fragile internal scraping path.
+Lyrics are not currently supported because the public Pear Desktop `api-server` routes used by this app do not expose a stable lyrics endpoint. Pear Desktop has a synced-lyrics plugin internally, so a clean future path would be an upstream API endpoint rather than scraping internal UI state.
 
 ## Architecture
 
@@ -254,7 +261,17 @@ Pear Desktop's YouTube Music volume is controlled separately from OS-level volum
 
 ## Project Status
 
-This project is early but usable. The core remote control loop is implemented; future work may include signed installers, automatic remote discovery, richer queue editing, and optional third-party lyrics integration.
+This project is early but usable. The core remote control loop is implemented; future work may include signed installers, automatic remote discovery, richer queue editing, and lyrics support if Pear Desktop exposes a stable lyrics API.
+
+## Promotion
+
+Recommended launch angle:
+
+- "A remote controller for Pear Desktop when your music machine is across the room."
+- Target Pear Desktop users first, not generic YouTube Music users.
+- Share short clips or screenshots showing search, queue, and volume control from another laptop.
+- Open issues upstream only for narrow API improvements; keep this repo focused on the companion app.
+- Avoid implying official Google, YouTube, YouTube Music, or Pear Desktop endorsement.
 
 ## Contributing
 
@@ -272,6 +289,12 @@ Keep the app focused: this is a remote controller for Pear Desktop's YouTube Mus
 ## Author
 
 Maintained by `chbae624@gmail.com`.
+
+## Disclaimer
+
+Pear YouTube Remote is an independent, unofficial companion app. It is not affiliated with, authorized by, endorsed by, or officially connected to Google LLC, YouTube, YouTube Music, Pear Desktop, or pear-devs.
+
+The names "Google", "YouTube", "YouTube Music", and "Pear Desktop" are used only for identification and compatibility description. All trademarks belong to their respective owners.
 
 ## License
 
