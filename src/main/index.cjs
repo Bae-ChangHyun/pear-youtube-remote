@@ -17,6 +17,7 @@ const DEFAULT_SETTINGS = {
   activeServerId: DEFAULT_SERVER.id,
   pollMs: 2500,
 };
+const APP_ICON = path.join(__dirname, '../../assets/icon.png');
 
 let settings = { ...DEFAULT_SETTINGS, servers: [...DEFAULT_SETTINGS.servers] };
 let mainWindow = null;
@@ -303,6 +304,7 @@ async function createWindow() {
     frame: process.platform === 'darwin',
     titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : 'default',
     autoHideMenuBar: true,
+    icon: APP_ICON,
     backgroundColor: '#0f0f0f',
     webPreferences: {
       preload: path.join(__dirname, '../preload/index.cjs'),
