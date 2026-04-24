@@ -12,6 +12,9 @@ A focused remote controller for YouTube Music running inside Pear Desktop.
 [![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20macOS-111111)](#install)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](#license)
 
+
+English · [한국어](README.ko.md)
+
 </div>
 
 ## About
