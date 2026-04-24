@@ -311,7 +311,7 @@ function App() {
   return (
     <main className="app-shell">
       <div className="window-chrome">
-        <div className="window-title">Remote YouTube CTL</div>
+        <div className="window-title">Pear YouTube Remote</div>
         {platform !== 'darwin' && (
           <div className="window-controls">
             <button onClick={() => api.windowMinimize()} aria-label="Minimize" />

@@ -1,7 +1,7 @@
 <div align="center">
-  <img src="assets/icon.png" alt="Remote YouTube CTL icon" width="128" height="128" />
+  <img src="assets/icon.png" alt="Pear YouTube Remote icon" width="128" height="128" />
 
-# Remote YouTube CTL
+# Pear YouTube Remote
 
 A minimal desktop remote controller for Pear Desktop's YouTube Music API server.
 
@@ -16,7 +16,7 @@ A minimal desktop remote controller for Pear Desktop's YouTube Music API server.
 
 ## About
 
-Remote YouTube CTL is a small Electron app for controlling YouTube Music running inside [Pear Desktop](https://github.com/pear-apps/pear-desktop) from another Linux or macOS machine.
+Pear YouTube Remote is a small Electron app for controlling YouTube Music running inside [Pear Desktop](https://github.com/pear-apps/pear-desktop) from another Linux or macOS machine.
 
 It talks to Pear Desktop's `api-server` plugin over HTTP, so the actual music playback stays on the remote computer while this app acts as a focused controller: search, play, queue, seek, volume, likes, shuffle, repeat, and connection switching.
 
@@ -69,8 +69,8 @@ http://192.168.0.25:26538
 ## Quick Start
 
 ```bash
-git clone <your-repo-url>
-cd remote-youtube-ctl
+git clone https://github.com/Bae-ChangHyun/pear-youtube-remote.git
+cd pear-youtube-remote
 npm install
 npm run dev:electron
 ```
@@ -162,7 +162,7 @@ Building macOS installers is most reliable on macOS. Unsigned local builds may s
 
 ## API Coverage
 
-Remote YouTube CTL currently uses these Pear Desktop `api-server` surfaces:
+Pear YouTube Remote currently uses these Pear Desktop `api-server` surfaces:
 
 - `GET /api/v1/song`
 - `GET /api/v1/song-info`
@@ -250,7 +250,7 @@ Check:
 
 ### Volume UI does not match system volume
 
-Pear Desktop's YouTube Music volume is controlled separately from OS-level volume. Remote YouTube CTL controls the Pear/YouTube Music player volume exposed by `api-server`.
+Pear Desktop's YouTube Music volume is controlled separately from OS-level volume. Pear YouTube Remote controls the Pear/YouTube Music player volume exposed by `api-server`.
 
 ## Project Status
 

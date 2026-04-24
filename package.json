@@ -1,8 +1,8 @@
 {
-  "name": "remote-youtube-ctl",
+  "name": "pear-youtube-remote",
   "version": "0.1.0",
   "private": true,
-  "description": "Desktop remote controller for Pear Desktop / YouTube Music API server.",
+  "description": "Desktop remote controller for Pear Desktop YouTube Music API server.",
   "type": "module",
   "main": "src/main/index.cjs",
   "scripts": {
@@ -37,8 +37,8 @@
     "wait-on": "^8.0.2"
   },
   "build": {
-    "appId": "dev.bch.remote-youtube-ctl",
-    "productName": "Remote YouTube CTL",
+    "appId": "dev.bch.pear-youtube-remote",
+    "productName": "Pear YouTube Remote",
     "files": [
       "dist/renderer/**/*",
       "src/main/**/*",
