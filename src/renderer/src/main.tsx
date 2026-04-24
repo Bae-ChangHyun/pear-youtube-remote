@@ -71,7 +71,8 @@ function nextSongTitle(nextSong: unknown) {
   const data = nextSong as any;
   if (!data) return '';
   const runs = data?.title?.runs?.map((run: any) => run?.text || '').join('');
-  return data.title || runs || data?.title?.simpleText || '';
+  if (typeof data.title === 'string') return data.title;
+  return runs || data?.title?.simpleText || '';
 }
 
 function isLiked(state: PlayerState) {
@@ -105,6 +106,7 @@ function App() {
   const hasLocalVolumeRef = useRef(false);
   const refreshTimerRef = useRef<number | null>(null);
   const volumeTipTimerRef = useRef<number | null>(null);
+  const volumeSyncResumeTimerRef = useRef<number | null>(null);
 
   const activeServer = useMemo(
     () => settings.servers.find((server) => server.id === settings.activeServerId) || settings.servers[0],
@@ -121,7 +123,12 @@ function App() {
       if (!silent) setBusy(true);
       const status = await api.probe();
       setProbe(status);
-      if (status.ok) {
+      if (status.status === 'needs-auth') {
+        setSong(null);
+        setPlayerState(DEFAULT_PLAYER_STATE);
+        setQueue([]);
+        setError('');
+      } else if (status.ok) {
         const [now, nextState, nextQueue] = await Promise.all([
           api.nowPlaying(),
           api.playerState().catch(() => DEFAULT_PLAYER_STATE),
@@ -182,6 +189,15 @@ function App() {
         setShowVolumeTip(false);
       }, 900);
     }
+  }
+
+  function pauseRemoteVolumeSync(delayMs = 1500) {
+    hasLocalVolumeRef.current = true;
+    if (volumeSyncResumeTimerRef.current) window.clearTimeout(volumeSyncResumeTimerRef.current);
+    volumeSyncResumeTimerRef.current = window.setTimeout(() => {
+      volumeSyncResumeTimerRef.current = null;
+      hasLocalVolumeRef.current = false;
+    }, delayMs);
   }
 
   async function search() {
@@ -245,7 +261,7 @@ function App() {
 
   function changeVolume(value: number) {
     const nextVolume = clampPercent(value);
-    hasLocalVolumeRef.current = true;
+    pauseRemoteVolumeSync();
     volumeRef.current = nextVolume;
     setVolume(nextVolume);
     revealVolumeTip();
@@ -253,7 +269,7 @@ function App() {
 
   function commitVolume(value = volumeRef.current) {
     const nextVolume = clampPercent(value);
-    hasLocalVolumeRef.current = true;
+    pauseRemoteVolumeSync();
     volumeRef.current = nextVolume;
     setVolume(nextVolume);
     setIsVolumeEditing(false);
@@ -302,6 +318,7 @@ function App() {
   useEffect(() => () => {
     if (refreshTimerRef.current) window.clearTimeout(refreshTimerRef.current);
     if (volumeTipTimerRef.current) window.clearTimeout(volumeTipTimerRef.current);
+    if (volumeSyncResumeTimerRef.current) window.clearTimeout(volumeSyncResumeTimerRef.current);
   }, []);
 
   const stateLabel = probe.status === 'connected' ? 'Connected' : probe.status === 'needs-auth' ? 'Auth required' : 'Offline';

@@ -372,7 +372,7 @@ ipcMain.handle('pear:control', async (_event, command, payload = {}) => {
   };
   const target = map[command];
   if (!target) throw new Error(`Unknown command: ${command}`);
-  await request(target[0], target[1], target[2] || {});
+  await request(target[0], target[1], target[2]);
   return { ok: true };
 });
 ipcMain.handle('pear:search', async (_event, query, limit) => {
