@@ -123,6 +123,15 @@ curl http://REMOTE_IP:26538/api/v1/song
 
 ## 설치
 
+### 다운로드
+
+빌드된 설치 파일은 [Releases](https://github.com/Bae-ChangHyun/pear-youtube-remote/releases) 페이지에서 받을 수 있습니다.
+
+| 플랫폼 | 파일 |
+| --- | --- |
+| macOS (Apple Silicon) | `.dmg` / `.zip` |
+| Linux | `.AppImage` / `.deb` |
+
 ### 개발 실행
 
 ```bash
@@ -164,7 +173,19 @@ macOS 타깃:
 npm run dist
 ```
 
-macOS 설치 파일은 macOS에서 빌드하는 것이 가장 안정적입니다. Apple Developer signing/notarization을 설정하지 않은 로컬 빌드는 Gatekeeper 경고가 표시될 수 있습니다.
+macOS 설치 파일은 macOS에서 빌드하는 것이 가장 안정적입니다.
+
+> **macOS Gatekeeper 경고**
+>
+> Apple Developer 인증서로 서명되지 않은 앱이므로, 처음 실행할 때 _"Apple이 악성 소프트웨어가 없는지 확인할 수 없습니다"_ 경고가 표시됩니다.
+>
+> 설치 후 터미널에서 다음 명령어를 실행하면 해결됩니다:
+>
+> ```bash
+> xattr -cr "/Applications/Pear YouTube Remote.app"
+> ```
+>
+> 또는 **시스템 설정 > 개인정보 보호 및 보안**에서 **확인 없이 열기**를 클릭하세요.
 
 ## 스크립트
 

@@ -117,6 +117,15 @@ curl http://REMOTE_IP:26538/api/v1/song
 
 ## Install
 
+### Download
+
+Pre-built installers are available on the [Releases](https://github.com/Bae-ChangHyun/pear-youtube-remote/releases) page:
+
+| Platform | File |
+| --- | --- |
+| macOS (Apple Silicon) | `.dmg` / `.zip` |
+| Linux | `.AppImage` / `.deb` |
+
 ### Development
 
 ```bash
@@ -158,7 +167,19 @@ macOS targets are configured for:
 npm run dist
 ```
 
-Building macOS installers is most reliable on macOS. Unsigned local builds may show a Gatekeeper warning; that is expected unless you configure Apple Developer signing and notarization.
+Building macOS installers is most reliable on macOS.
+
+> **macOS Gatekeeper warning**
+>
+> Because the app is not signed with an Apple Developer certificate, macOS will block it on first launch with a message like _"Apple cannot check it for malicious software."_
+>
+> To fix this, run the following command after installing:
+>
+> ```bash
+> xattr -cr "/Applications/Pear YouTube Remote.app"
+> ```
+>
+> Or go to **System Settings > Privacy & Security** and click **Open Anyway**.
 
 ## Scripts
 
