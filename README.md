@@ -119,7 +119,7 @@ curl http://REMOTE_IP:26538/api/v1/song
 
 ### Download
 
-Pre-built installers are available on the [Releases](https://github.com/Bae-ChangHyun/pear-youtube-remote/releases) page:
+Pre-built installers are available on the [Releases](https://github.com/Changroro/pear-youtube-remote/releases) page:
 
 | Platform | File |
 | --- | --- |

@@ -125,7 +125,7 @@ curl http://REMOTE_IP:26538/api/v1/song
 
 ### 다운로드
 
-빌드된 설치 파일은 [Releases](https://github.com/Bae-ChangHyun/pear-youtube-remote/releases) 페이지에서 받을 수 있습니다.
+빌드된 설치 파일은 [Releases](https://github.com/Changroro/pear-youtube-remote/releases) 페이지에서 받을 수 있습니다.
 
 | 플랫폼 | 파일 |
 | --- | --- |
