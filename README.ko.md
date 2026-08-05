@@ -85,7 +85,7 @@ http://192.168.0.25:26538
 ## 빠른 시작
 
 ```bash
-git clone https://github.com/Bae-ChangHyun/pear-youtube-remote.git
+git clone https://github.com/Changroro/pear-youtube-remote.git
 cd pear-youtube-remote
 npm install
 npm run dev:electron
